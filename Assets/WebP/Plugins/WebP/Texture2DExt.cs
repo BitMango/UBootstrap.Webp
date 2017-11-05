@@ -16,6 +16,8 @@ namespace WebP
     public static class Texture2DExt
     {
         public delegate void ScalingFunction(ref int width, ref int height);
+        static byte[] lRawDataBuffer;
+        static int bufferSize = 0;
 
         /// <summary>
         /// Scaling funtion to scale image to specific width and height.
@@ -102,7 +104,6 @@ namespace WebP
         public static unsafe byte[] LoadRGBAFromWebP(byte[] lData, ref int lWidth, ref int lHeight, bool lMipmaps, out Status lError, ScalingFunction scalingFunction = null)
         {
             lError = 0;
-            byte[] lRawData = null;
             int lLength = lData.Length;
 
             fixed (byte* lDataPtr = lData)
@@ -119,8 +120,15 @@ namespace WebP
                 {
                     numBytesRequired = Mathf.CeilToInt((numBytesRequired * 4.0f) / 3.0f);
                 }
+                
+                //Replace tmp byte array with static byte buffer (lRawData -> lRawDataBuffer)
+                //lRawData = new byte[numBytesRequired];
+                
+                if (lRawDataBuffer == null) {
+                    bufferSize = Mathf.CeilToInt(((2048 * 2048 * 4) * 4.0f) / 3.0f);
+                    lRawDataBuffer = new byte[bufferSize];
+                }
 
-                lRawData = new byte[numBytesRequired];
                 fixed (byte* lRawDataPtr = lRawData)
                 {
                     int lStride = 4 * lWidth;
@@ -170,7 +178,7 @@ namespace WebP
                 }
                 lError = Status.SUCCESS;
             }
-            return lRawData;
+            return lRawDataBuffer;
         }
 
         /// <summary>
