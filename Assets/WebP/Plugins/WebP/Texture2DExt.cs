@@ -129,7 +129,7 @@ namespace WebP
                     lRawDataBuffer = new byte[bufferSize];
                 }
 
-                fixed (byte* lRawDataPtr = lRawData)
+                fixed (byte* lRawDataPtr = lRawDataBuffer)
                 {
                     int lStride = 4 * lWidth;
 
