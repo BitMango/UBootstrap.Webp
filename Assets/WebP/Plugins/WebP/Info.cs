@@ -11,11 +11,7 @@ namespace WebP
         public static string GetDecoderVersion()
         {
             uint v = 0;
-            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                v = (uint)WebP.Extern.NativeBindings_Android.WebPGetDecoderVersion();
-            } else {
-                v = (uint)WebP.Extern.NativeBindings_iOS.WebPGetDecoderVersion();   
-            }
+            v = (uint)WebP.Extern.NativeBindings.WebPGetDecoderVersion();
 
             var revision = v % 256;
             var minor = (v >> 8) % 256;
@@ -26,12 +22,7 @@ namespace WebP
         public static string GetEncoderVersion()
         {
             uint v = 0;
-            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                v = (uint)WebP.Extern.NativeBindings_Android.WebPGetEncoderVersion();
- 
-            } else {
-                v = (uint)WebP.Extern.NativeBindings_iOS.WebPGetEncoderVersion();
-            }
+            v = (uint)WebP.Extern.NativeBindings.WebPGetEncoderVersion();
 
             var revision = v % 256;
             var minor = (v >> 8) % 256;

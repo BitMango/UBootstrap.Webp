@@ -724,9 +724,9 @@ namespace WebP.Extern
         public static VP8StatusCode WebPGetFeatures(IntPtr data, UIntPtr data_size, ref WebPBitstreamFeatures features)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_Android.WebPGetFeatures(data, data_size, ref features);
             } else {
-                return NativeBindings_iOS.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPGetFeatures(data, data_size, ref features);
             }
         }
 
@@ -740,9 +740,9 @@ namespace WebP.Extern
         public static int WebPInitDecoderConfig(ref WebPDecoderConfig config)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPInitDecoderConfigInternal(ref config, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_Android.WebPInitDecoderConfig(ref config);
             } else {
-                return NativeBindings_iOS.WebPInitDecoderConfigInternal(ref config, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPInitDecoderConfig(ref config);
             }
         }
 
@@ -762,9 +762,9 @@ namespace WebP.Extern
         public static int WebPInitDecBuffer(ref WebPDecBuffer buffer)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPInitDecBufferInternal(ref buffer, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_Android.WebPInitDecBuffer(ref buffer);
             } else {
-                return NativeBindings_iOS.WebPInitDecBufferInternal(ref buffer, WEBP_DECODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPInitDecBuffer(ref buffer);
             }
         }
 
@@ -793,9 +793,9 @@ namespace WebP.Extern
         public static int WebPConfigInit(ref WebPConfig config)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_Android.WebPConfigInit(ref config);
             } else {
-                return NativeBindings_iOS.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPConfigInit(ref config);
             }
         }
 
@@ -811,9 +811,9 @@ namespace WebP.Extern
         public static int WebPConfigPreset(ref WebPConfig config, WebPPreset preset, float quality)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_Android.WebPConfigInit(ref config);
             } else {
-                return NativeBindings_iOS.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPConfigInit(ref config);
             }
         }
 
@@ -828,9 +828,9 @@ namespace WebP.Extern
         public static int WebPPictureInit(ref WebPPicture picture)
         {
             if (GetPlatformName() == "android") {
-                return NativeBindings_Android.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_Android.WebPPictureInit(ref picture);
             } else {
-                return NativeBindings_iOS.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
+                return NativeBindings_iOS.WebPPictureInit(ref picture);
             }
         }
         
@@ -863,6 +863,22 @@ namespace WebP.Extern
                 return NativeBindings_Android.WebPDecode(data, data_size, ref config);
             } else {
                 return NativeBindings_iOS.WebPDecode(data, data_size, ref config);
+            }
+        }
+
+        public static int WebPGetDecoderVersion() {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPGetDecoderVersion();
+            } else {
+                return NativeBindings_iOS.WebPGetDecoderVersion();
+            }
+        }
+        
+        public static int WebPGetEncoderVersion() {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPGetEncoderVersion();
+            } else {
+                return NativeBindings_iOS.WebPGetEncoderVersion();
             }
         }
     }

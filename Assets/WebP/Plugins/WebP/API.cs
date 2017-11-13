@@ -160,11 +160,7 @@ namespace WebP
                     config.output.is_external_memory= 1;
 
                     // Decode
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        result = NativeBindings_Android.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
-                    } else {
-                        result = NativeBindings_iOS.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
-                    }
+                    result = NativeBindings.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
 
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
