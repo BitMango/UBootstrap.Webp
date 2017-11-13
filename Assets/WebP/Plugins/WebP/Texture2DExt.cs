@@ -85,11 +85,8 @@ namespace WebP
                 lWidth = 0;
                 lHeight = 0;
                 int result = 0;
-                if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                    result = NativeBindings_Android.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight);
-                } else {
-                    result = NativeBindings_iOS.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight);
-                }
+                result = NativeBindings.WebPGetInfo((IntPtr)lDataPtr, (UIntPtr)lData.Length, ref lWidth, ref lHeight);
+
                 if (result == 0)
                 {
                     throw new Exception("Invalid WebP header detected");
@@ -146,11 +143,7 @@ namespace WebP
                     WebPDecoderConfig config = new WebPDecoderConfig();
                     int ret = 0;
 
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        ret = NativeBindings_Android.WebPInitDecoderConfig(ref config);
-                    } else {
-                        ret = NativeBindings_iOS.WebPInitDecoderConfig(ref config);
-                    }
+                    ret = NativeBindings.WebPInitDecoderConfig(ref config);
 
                     if (ret == 0)
                     {
@@ -168,11 +161,7 @@ namespace WebP
 
                     // read the .webp input file information
                     VP8StatusCode result = 0;
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        result = NativeBindings_Android.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
-                    } else {
-                        result = NativeBindings_iOS.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
-                    }
+                    result = NativeBindings.WebPGetFeatures((IntPtr)lDataPtr, (UIntPtr)lLength, ref config.input);
 
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
@@ -189,11 +178,7 @@ namespace WebP
                     config.output.is_external_memory = 1;
 
                     // Decode
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        result = NativeBindings_Android.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
-                    } else {
-                        result = NativeBindings_iOS.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
-                    }
+                    result = NativeBindings.WebPDecode((IntPtr)lDataPtr, (UIntPtr)lLength, ref config);
 
                     if (result != VP8StatusCode.VP8_STATUS_OK)
                     {
@@ -285,19 +270,11 @@ namespace WebP
 
                 if (lQuality == -1)
                 {
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        lLength = (int)NativeBindings_Android.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
-                    } else {
-                        lLength = (int)NativeBindings_iOS.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
-                    }
+                    lLength = (int)NativeBindings.WebPEncodeLosslessRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, ref lResult);
                 }
                 else
                 {
-                    if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                        lLength = (int)NativeBindings_Android.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
-                    } else {
-                        lLength = (int)NativeBindings_iOS.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
-                    }
+                    lLength = (int)NativeBindings.WebPEncodeRGBA(lRawDataPtr, lWidth, lHeight, 4 * lWidth, lQuality, ref lResult);
                 }
 
                 if (lLength == 0)
@@ -310,11 +287,7 @@ namespace WebP
             }
             finally
             {
-                if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
-                    NativeBindings_Android.WebPSafeFree(lResult);
-                } else {
-                    NativeBindings_iOS.WebPSafeFree(lResult);
-                }
+                NativeBindings.WebPSafeFree(lResult);
             }
 
             lPinnedArray.Free();

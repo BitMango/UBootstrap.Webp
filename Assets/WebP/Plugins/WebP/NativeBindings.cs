@@ -642,6 +642,230 @@ namespace WebP.Extern
         [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 2, ArraySubType = UnmanagedType.SysUInt)]
         public IntPtr[] pad5;
     }
+
+    public class NativeBindings {
+
+        /// WEBP_DECODER_ABI_VERSION 0x0203    // MAJOR(8b) + MINOR(8b)
+        public const int WEBP_DECODER_ABI_VERSION = 515;
+
+        /// WEBP_ENCODER_ABI_VERSION 0x0202    // MAJOR(8b) + MINOR(8b)
+        public const int WEBP_ENCODER_ABI_VERSION = 514;
+
+        public static string CurrentPlatform = "";
+        public static string GetPlatformName() {
+            if (CurrentPlatform != "") {
+                return CurrentPlatform;
+            }
+
+            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
+                CurrentPlatform = "android";
+            } else {
+                CurrentPlatform = "ios";
+            }
+
+            return CurrentPlatform;
+        }
+        // Some useful macros:
+
+        /// <summary>
+        /// Returns true if the specified mode uses a premultiplied alpha
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public static bool WebPIsPremultipliedMode(WEBP_CSP_MODE mode)
+        {
+
+            return (mode == WEBP_CSP_MODE.MODE_rgbA || mode == WEBP_CSP_MODE.MODE_bgrA || mode == WEBP_CSP_MODE.MODE_Argb ||
+                mode == WEBP_CSP_MODE.MODE_rgbA_4444);
+
+        }
+
+        /// <summary>
+        /// Returns true if the given mode is RGB(A)
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public static bool WebPIsRGBMode(WEBP_CSP_MODE mode)
+        {
+
+            return (mode < WEBP_CSP_MODE.MODE_YUV);
+
+        }
+
+
+        /// <summary>
+        /// Returns true if the given mode has an alpha channel
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        public static bool WebPIsAlphaMode(WEBP_CSP_MODE mode)
+        {
+
+            return (mode == WEBP_CSP_MODE.MODE_RGBA || mode == WEBP_CSP_MODE.MODE_BGRA || mode == WEBP_CSP_MODE.MODE_ARGB ||
+                    mode == WEBP_CSP_MODE.MODE_RGBA_4444 || mode == WEBP_CSP_MODE.MODE_YUVA ||
+                    WebPIsPremultipliedMode(mode));
+
+        }
+
+
+
+        // 
+
+        /// <summary>
+        /// Retrieve features from the bitstream. The *features structure is filled
+        /// with information gathered from the bitstream.
+        /// Returns false in case of error or version mismatch.
+        /// In case of error, features->bitstream_status will reflect the error code.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="data_size"></param>
+        /// <param name="features"></param>
+        /// <returns></returns>
+        public static VP8StatusCode WebPGetFeatures(IntPtr data, UIntPtr data_size, ref WebPBitstreamFeatures features)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
+            }
+        }
+
+        /// <summary>
+        /// Initialize the configuration as empty. This function must always be
+        /// called first, unless WebPGetFeatures() is to be called.
+        /// Returns false in case of mismatched version.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static int WebPInitDecoderConfig(ref WebPDecoderConfig config)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPInitDecoderConfigInternal(ref config, WEBP_DECODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPInitDecoderConfigInternal(ref config, WEBP_DECODER_ABI_VERSION);
+            }
+        }
+
+        public static int WebPGetInfo(IntPtr data, UIntPtr data_size, ref int width, ref int height) {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPGetInfo(data, data_size, ref width, ref height);
+            } else {
+                return NativeBindings_iOS.WebPGetInfo(data, data_size, ref width, ref height);
+            }
+        }
+
+        /// <summary>
+        /// Initialize the structure as empty. Must be called before any other use. Returns false in case of version mismatch
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public static int WebPInitDecBuffer(ref WebPDecBuffer buffer)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPInitDecBufferInternal(ref buffer, WEBP_DECODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPInitDecBufferInternal(ref buffer, WEBP_DECODER_ABI_VERSION);
+            }
+        }
+
+
+
+        //    // Deprecated alpha-less version of WebPIDecGetYUVA(): it will ignore the
+
+        //// alpha information (if present). Kept for backward compatibility.
+
+        //public IntPtr WebPIDecGetYUV(IntPtr decoder, int* last_y, uint8_t** u, uint8_t** v,
+
+        //    int* width, int* height, int* stride, int* uv_stride) {
+
+        //  return WebPIDecGetYUVA(idec, last_y, u, v, NULL, width, height,
+
+        //                         stride, uv_stride, NULL);
+
+        /// <summary>
+        /// Should always be called, to initialize a fresh WebPConfig structure before
+        /// modification. Returns false in case of version mismatch. WebPConfigInit()
+        /// must have succeeded before using the 'config' object.
+        /// Note that the default values are lossless=0 and quality=75.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public static int WebPConfigInit(ref WebPConfig config)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
+            }
+        }
+
+        /// <summary>
+        /// This function will initialize the configuration according to a predefined
+        /// set of parameters (referred to by 'preset') and a given quality factor.
+        /// This function can be called as a replacement to WebPConfigInit(). Will return false in case of error.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="preset"></param>
+        /// <param name="quality"></param>
+        /// <returns></returns>
+        public static int WebPConfigPreset(ref WebPConfig config, WebPPreset preset, float quality)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
+            }
+        }
+
+        /// <summary>
+        /// Should always be called, to initialize the structure. Returns false in case
+        /// of version mismatch. WebPPictureInit() must have succeeded before using the
+        /// 'picture' object.
+        /// Note that, by default, use_argb is false and colorspace is WEBP_YUV420.
+        /// </summary>
+        /// <param name="picture"></param>
+        /// <returns></returns>
+        public static int WebPPictureInit(ref WebPPicture picture)
+        {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
+            } else {
+                return NativeBindings_iOS.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
+            }
+        }
+        
+        public static UIntPtr WebPEncodeLosslessRGBA(IntPtr rgb, int width, int height, int stride, ref IntPtr output) {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPEncodeLosslessRGBA(rgb, width, height, stride, ref output);
+            } else {
+                return NativeBindings_iOS.WebPEncodeLosslessRGBA(rgb, width, height, stride, ref output);
+            }
+        }
+
+        public static UIntPtr WebPEncodeRGBA (IntPtr rgba, int width, int height, int stride, float quality_factor, ref IntPtr output) {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPEncodeRGBA(rgba, width, height, stride, quality_factor, ref output);
+            } else {
+                return NativeBindings_iOS.WebPEncodeRGBA(rgba, width, height, stride, quality_factor, ref output);
+            }
+        }
+        
+        public static void WebPSafeFree(IntPtr toDeallocate) {
+            if (GetPlatformName() == "android") {
+                NativeBindings_Android.WebPSafeFree(toDeallocate);
+            } else {
+                NativeBindings_iOS.WebPSafeFree(toDeallocate);
+            }
+        }
+
+        public static VP8StatusCode WebPDecode (IntPtr data, UIntPtr data_size, ref WebPDecoderConfig config) {
+            if (GetPlatformName() == "android") {
+                return NativeBindings_Android.WebPDecode(data, data_size, ref config);
+            } else {
+                return NativeBindings_iOS.WebPDecode(data, data_size, ref config);
+            }
+        }
+    }
 }
 
 #pragma warning restore 1591
