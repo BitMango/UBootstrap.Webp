@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 #pragma warning disable 1591
 
 namespace WebP.Extern {
-        public class NativeBindings_Android
+        public class NativeBindings_OSX
     {
-        private const string WEBP_LIB = "webp";
+        private const string WEBP_LIB = "libwebp";
 
         /// WEBP_DECODER_ABI_VERSION 0x0203    // MAJOR(8b) + MINOR(8b)
         public const int WEBP_DECODER_ABI_VERSION = 515;
@@ -656,7 +656,7 @@ namespace WebP.Extern {
         /// <returns></returns>
         public static VP8StatusCode WebPGetFeatures(IntPtr data, UIntPtr data_size, ref WebPBitstreamFeatures features)
         {
-            return NativeBindings_Android.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
+            return NativeBindings_OSX.WebPGetFeaturesInternal(data, data_size, ref features, WEBP_DECODER_ABI_VERSION);
 
         }
         /// <summary>
@@ -708,7 +708,7 @@ namespace WebP.Extern {
         /// <returns></returns>
         public static int WebPConfigInit(ref WebPConfig config)
         {
-            return NativeBindings_Android.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
+            return NativeBindings_OSX.WebPConfigInitInternal(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75.0f, WEBP_ENCODER_ABI_VERSION);
         }
 
         /// <summary>
@@ -722,7 +722,7 @@ namespace WebP.Extern {
         /// <returns></returns>
         public static int WebPConfigPreset(ref WebPConfig config, WebPPreset preset, float quality)
         {
-            return NativeBindings_Android.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
+            return NativeBindings_OSX.WebPConfigInitInternal(ref config, preset, quality, WEBP_ENCODER_ABI_VERSION);
         }
 
         /// <summary>
@@ -736,7 +736,7 @@ namespace WebP.Extern {
         public static int WebPPictureInit(ref WebPPicture picture)
         {
 
-            return NativeBindings_Android.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
+            return NativeBindings_OSX.WebPPictureInitInternal(ref picture, WEBP_ENCODER_ABI_VERSION);
 
         }
     }

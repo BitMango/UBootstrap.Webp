@@ -657,8 +657,10 @@ namespace WebP.Extern
                 return CurrentPlatform;
             }
 
-            if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.Android) {
+            if (Application.platform == RuntimePlatform.Android) {
                 CurrentPlatform = "android";
+            } else if(Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer) {
+                CurrentPlatform = "editor";
             } else {
                 CurrentPlatform = "ios";
             }
@@ -725,8 +727,10 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPGetFeatures(data, data_size, ref features);
-            } else {
+            } else if (GetPlatformName() ==  "ios"){
                 return NativeBindings_iOS.WebPGetFeatures(data, data_size, ref features);
+            } else {
+                return NativeBindings_OSX.WebPGetFeatures(data, data_size, ref features);
             }
         }
 
@@ -741,16 +745,20 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPInitDecoderConfig(ref config);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPInitDecoderConfig(ref config);
+            } else {
+                return NativeBindings_OSX.WebPInitDecoderConfig(ref config);
             }
         }
 
         public static int WebPGetInfo(IntPtr data, UIntPtr data_size, ref int width, ref int height) {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPGetInfo(data, data_size, ref width, ref height);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPGetInfo(data, data_size, ref width, ref height);
+            } else {
+                return NativeBindings_OSX.WebPGetInfo(data, data_size, ref width, ref height);
             }
         }
 
@@ -763,8 +771,10 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPInitDecBuffer(ref buffer);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPInitDecBuffer(ref buffer);
+            } else {
+                return NativeBindings_OSX.WebPInitDecBuffer(ref buffer);
             }
         }
 
@@ -794,8 +804,10 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPConfigInit(ref config);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPConfigInit(ref config);
+            } else {
+                return NativeBindings_OSX.WebPConfigInit(ref config);
             }
         }
 
@@ -812,8 +824,10 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPConfigInit(ref config);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPConfigInit(ref config);
+            } else {
+                return NativeBindings_OSX.WebPConfigInit(ref config);
             }
         }
 
@@ -829,56 +843,70 @@ namespace WebP.Extern
         {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPPictureInit(ref picture);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPPictureInit(ref picture);
+            } else {
+				return NativeBindings_OSX.WebPPictureInit(ref picture);
             }
         }
         
         public static UIntPtr WebPEncodeLosslessRGBA(IntPtr rgb, int width, int height, int stride, ref IntPtr output) {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPEncodeLosslessRGBA(rgb, width, height, stride, ref output);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPEncodeLosslessRGBA(rgb, width, height, stride, ref output);
+            } else {
+                return NativeBindings_OSX.WebPEncodeLosslessRGBA(rgb, width, height, stride, ref output);
             }
         }
 
         public static UIntPtr WebPEncodeRGBA (IntPtr rgba, int width, int height, int stride, float quality_factor, ref IntPtr output) {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPEncodeRGBA(rgba, width, height, stride, quality_factor, ref output);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPEncodeRGBA(rgba, width, height, stride, quality_factor, ref output);
+            } else {
+                return NativeBindings_OSX.WebPEncodeRGBA(rgba, width, height, stride, quality_factor, ref output);
             }
         }
         
         public static void WebPSafeFree(IntPtr toDeallocate) {
             if (GetPlatformName() == "android") {
                 NativeBindings_Android.WebPSafeFree(toDeallocate);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 NativeBindings_iOS.WebPSafeFree(toDeallocate);
+            } else {
+                NativeBindings_OSX.WebPSafeFree(toDeallocate);
             }
         }
 
         public static VP8StatusCode WebPDecode (IntPtr data, UIntPtr data_size, ref WebPDecoderConfig config) {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPDecode(data, data_size, ref config);
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPDecode(data, data_size, ref config);
+            } else {
+                return NativeBindings_OSX.WebPDecode(data, data_size, ref config);
             }
         }
 
         public static int WebPGetDecoderVersion() {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPGetDecoderVersion();
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPGetDecoderVersion();
+            } else {
+                return NativeBindings_OSX.WebPGetDecoderVersion();
             }
         }
         
         public static int WebPGetEncoderVersion() {
             if (GetPlatformName() == "android") {
                 return NativeBindings_Android.WebPGetEncoderVersion();
-            } else {
+            } else if (GetPlatformName() == "ios") {
                 return NativeBindings_iOS.WebPGetEncoderVersion();
+            } else {
+                return NativeBindings_OSX.WebPGetEncoderVersion();
             }
         }
     }
